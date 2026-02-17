@@ -7,47 +7,49 @@ class Order(
     private val _products: MutableList<Product> = mutableListOf()
 
     /** Read-only view of products in the order. */
-    val products: List<Product> get() = _products.toList()
+    val products: List<Product>
+        get() = _products.toList()
 
     var status: OrderStatus = OrderStatus.Created
         private set
 
-    /**
-     * Adds a product to the order.
-     * If the product is null, it should be ignored.
-     */
     fun addProduct(product: Product?) {
-        // TODO: add product to _products, ignore null
+        if (product !is Product) {
+            return
+        }
+
+        _products.add(product)
     }
 
-    /**
-     * Removes the first product matching [productId].
-     */
     fun removeProductById(productId: Int) {
-        // TODO: remove product from _products by id
+        for (i in 0 until _products.size) {
+            if (_products[i].id == productId) {
+                _products.removeAt(i)
+
+                return
+            }
+        }
     }
 
-    /**
-     * Returns the total price of all products in the order.
-     */
     override fun calculateTotal(): Int {
-        // TODO: sum the prices of all products
-        return 0
+        var sum = 0
+
+        _products.forEach {
+            sum += it.price
+        }
+
+        return sum
     }
 
-    /**
-     * Marks the order as paid.
-     * Throws [IllegalStateException] if the order has no products.
-     */
     fun pay() {
-        // TODO: throw if _products is empty, otherwise set status to Paid
-    }
+        if (_products.isEmpty()) {
+            throw IllegalStateException()
+        }
 
-    /**
-     * Cancels the order with the given reason.
-     * If [reason] is null, use "Unknown reason".
-     */
+        status = OrderStatus.Paid
+    }
+    
     fun cancel(reason: String?) {
-        // TODO: set status to Cancelled with reason (default "Unknown reason" if null)
+        status = OrderStatus.Cancelled(reason ?: "Unknown reason")
     }
 }
