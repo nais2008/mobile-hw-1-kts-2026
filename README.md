@@ -105,4 +105,9 @@ Order ──> applyDiscount(...)
 ## ✅ Как проверять домашнее задание
 
 Для проверки задания используйте команду:
+
+![docs/img.png](docs/img.png)
+
+```cmd
 ./gradlew verifyHomework
+```
